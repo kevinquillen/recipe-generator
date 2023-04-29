@@ -1,0 +1,73 @@
+name: '{{ recipe_name }}'
+description: '{{ recipe_description }}'
+type: '{{ recipe_type }}'
+
+install:
+{% for module in modules %}
+  - {{ module }}
+{% endfor %}
+
+{% if config %}
+config:
+  import:
+    dblog: '*'
+    image: '*'
+    media: '*'
+    media_library: '*'
+    pathauto: '*'
+    redirect:
+      - redirect.settings
+      - system.action.redirect_delete_action
+      - views.view.redirect
+    node:
+      - views.view.content
+    user:
+      - views.view.user_admin_people
+    gin:
+      - gin.settings
+      - block.block.gin_breadcrumbs
+      - block.block.gin_content
+      - block.block.gin_local_actions
+      - block.block.gin_messages
+      - block.block.gin_page_title
+      - block.block.gin_primary_local_tasks
+      - block.block.gin_secondary_local_tasks
+  actions:
+    block.block.gin_admin:
+      simple_config_update:
+        status: false
+    block.block.gin_branding:
+      simple_config_update:
+        status: false
+    block.block.gin_local_actions:
+      simple_config_update:
+        region: content
+        weight: -10
+    block.block.gin_local_tasks:
+      simple_config_update:
+        status: false
+    block.block.gin_page_title:
+      simple_config_update:
+        region: header
+        weight: -10
+    block.block.gin_primary_local_tasks:
+      simple_config_update:
+        region: header
+        weight: -5
+    block.block.gin_tools:
+      simple_config_update:
+        status: false
+    node.settings:
+      simple_config_update:
+        use_admin_theme: true
+    user.settings:
+      simple_config_update:
+        register: admin_only
+    automated_cron.settings:
+      simple_config_update:
+        interval: 0
+    system.theme:
+      simple_config_update:
+        admin: 'gin'
+        default: 'stark'
+{% endif %}

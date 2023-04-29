@@ -1,0 +1,20 @@
+{
+  "name": "kevinquillen/recipe-generator",
+  "description": "Adds Drush command(s) to help generate Recipes for Drupal.",
+  "keywords": ["drush", "Drupal", "drush generator", "drush commands", "recipes", "drupal recipes"],
+  "license": "MIT",
+  "authors": [
+	{
+	  "name": "Kevin Quillen",
+	  "homepage": "https://kevinquillen.com",
+	  "role": "Maintainer"
+	}
+  ],
+  "autoload": {
+	"psr-4": { "kevinquillen\\": "src" }
+  },
+  "require": {
+	"drupal/core": "^10",
+	"drush/drush": "^11"
+  }
+}

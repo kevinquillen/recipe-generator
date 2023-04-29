@@ -1,0 +1,19 @@
+{
+    "name": "{{ vendor_name }}/{{ package_name }}",
+    "description": "{{ recipe_description }}",
+    "keywords": ["recipe", "Drupal recipes", "drupal recipe"],
+    "type": "drupal-recipe",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "{{ author_name }}",
+            "role": "Maintainer"
+        }
+    ]{% if dependencies %},
+    "require": {
+    {% for dependency in dependencies %}
+        "{{ dependency.name}}": "{{ dependency.version }}"{% if not loop.last %},{% endif %}
+    {% endfor %}
+    }
+    {% endif %}
+}
