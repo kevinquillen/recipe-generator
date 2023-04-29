@@ -43,21 +43,29 @@ final class RecipeGenerator extends DrupalGenerator {
   /**
    * {@inheritdoc}
    */
+  protected function getExtensionList(): array {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function generate(array &$vars): void {
-    $this->collectDefault($vars);
+    $vars['recipe_name'] = $this->ask('What is the name of this recipe?', 'My Custom Recipe', '::validateRequired');
+    $vars['recipe_directory'] = $this->ask('In what directory should this recipe be saved under /recipes (ex. "my-recipe")?', 'my-custom-recipe', '::validateRequired');
+    $vars['recipe_type'] = $this->ask('What type of recipe is this (Site, Content Type, Workflow, etc)?', NULL, '::validateRequired');
+    $vars['recipe_description'] = $this->ask('What does this recipe do?', NULL, '::validateRequired');
     $vars['composer'] = $this->collectComposerInfo($vars);
 
-    $this->addFile('composer.json', 'composer/composer.json')->skipIfExists();
+    $this->addFile('composer.json', 'composer/composer.json');
+    $this->addFile('recipe.yml', 'recipe/recipe.yml');
   }
 
   /**
    * Returns destination for generated recipes.
    */
   public function getDestination(array $vars): ?string {
-    $recipes_dir = \is_dir($this->drupalContext->getDrupalRoot() . '/recipes/custom') ?
-      'recipes/custom' : 'recipes';
-
-    return $this->drupalContext->getDrupalRoot() . '/' . $recipes_dir;
+    return $this->drupalContext->getDrupalRoot() . '/recipes/custom/' . $vars['recipe_directory'];
   }
 
   /**
@@ -77,28 +85,34 @@ final class RecipeGenerator extends DrupalGenerator {
       return $vars['composer'];
     }
 
+    $question = new Question('Enter the vendor name.', 'drupal');
+    $vendor_name = $this->io()->askQuestion($question);
+
+    $question = new Question('Enter the package name.', 'my-custom-recipe');
+    $package_name = $this->io()->askQuestion($question);
+
+    $question = new Question('What is your name? This will be set as the author.', 'Developer');
+    $author_name = $this->io()->askQuestion($question);
+
+    $vars['composer']['vendor_name'] = $vendor_name;
+    $vars['composer']['package_name'] = $package_name;
+    $vars['composer']['author_name'] = $author_name;
+
     while (TRUE) {
-      $this->io->text('test');
-      $question = new Question('Enter the vendor name of this recipe.', 'drupal');
-      $vendor_name = $this->io()->askQuestion($question);
+      $question = new Question('Enter the name of the dependency to add (ex. drupal/pathauto).');
+      $dependency = $this->io()->askQuestion($question);
 
-      if (!$vendor_name) {
+      if (!$dependency) {
         break;
       }
 
-      $question = new Question('Enter the package name.', 'my-custom-recipe');
-      $package_name = $this->io()->askQuestion($question);
+      $question = new Question('Enter the version of this dependency to require (ex. ^1.0)');
+      $version = $this->io()->askQuestion($question);
 
-      if (!$package_name) {
-        break;
-      }
-
-      $question = new Question('Enter a description for this recipe.', 'My awesome Drupal recipe.');
-      $recipe_description = $this->io()->askQuestion($question);
-
-      $vars['composer']['vendor_name'] = $vendor_name;
-      $vars['composer']['package_name'] = $package_name;
-      $vars['composer']['recipe_description'] = $recipe_description;
+      $vars['composer']['dependencies'][] = [
+        'name' => $dependency,
+        'version' => $version,
+      ];
     }
 
     return $vars['composer'];

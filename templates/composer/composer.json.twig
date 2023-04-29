@@ -1,19 +1,20 @@
 {
     "name": "{{ composer.vendor_name }}/{{ composer.package_name }}",
-    "description": "{{ composer.recipe_description }}",
+    "description": "{{ recipe_description }}",
     "keywords": ["recipe", "Drupal recipes", "drupal recipe"],
     "type": "drupal-recipe",
     "license": "GPL-2.0-or-later",
     "authors": [
         {
-            "name": "{{ author_name }}",
+            "name": "{{ composer.author_name }}",
             "role": "Maintainer"
         }
-    ]{% if dependencies %},
+    ],
     "require": {
-    {% for dependency in dependencies %}
-        "{{ dependency.name}}": "{{ dependency.version }}"{% if not loop.last %},{% endif %}
+    {% for dependency in composer.dependencies %}
+        "{{ dependency.name }}": "{{ dependency.version }}"{% if not loop.last %},
+      {% endif %}
     {% endfor %}
+
     }
-    {% endif %}
 }

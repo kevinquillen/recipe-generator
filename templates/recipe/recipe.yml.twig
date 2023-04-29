@@ -1,10 +1,14 @@
-{{ machine_name }}.settings:
-  type: config_object
-  label: '{{ name }} API settings'
-  mapping:
-    api_key:
-      type: string
-      label: 'The API key.'
-    hostname:
-      type: string
-      label: 'The hostname or base URI of the API.'
+name: '{{ recipe_name }}'
+description: '{{ recipe_description }}'
+type: '{{ recipe_type }}'
+
+install:
+{% for module in modules %}
+  - {{ module }}
+{% endfor %}
+
+{% if config %}
+config:
+  import:
+  actions:
+{% endif %}
