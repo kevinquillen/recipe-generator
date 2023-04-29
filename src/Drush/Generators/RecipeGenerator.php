@@ -12,6 +12,13 @@ use Symfony\Component\Console\Question\Question;
  */
 final class RecipeGenerator extends DrupalGenerator {
 
+  public const EXTENSION_TYPE_RECIPE = 0x04;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected ?int $extensionType = self::EXTENSION_TYPE_RECIPE;
+
   /**
    * The Drush generator command name.
    *
