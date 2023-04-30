@@ -12,6 +12,9 @@ use Symfony\Component\Console\Question\Question;
  */
 final class RecipeGenerator extends DrupalGenerator {
 
+  /**
+   * This is a temporary workaround until Drupal generator supports Recipes.
+   */
   public const EXTENSION_TYPE_RECIPE = 0x04;
 
   /**
@@ -68,6 +71,8 @@ final class RecipeGenerator extends DrupalGenerator {
 
   /**
    * Returns destination for generated recipes.
+   *
+   * This is a temporary workaround until Drupal generator supports Recipes.
    */
   public function getDestination(array $vars): ?string {
     return $this->drupalContext->getDrupalRoot() . '/recipes/custom/' . $vars['recipe_directory'];
