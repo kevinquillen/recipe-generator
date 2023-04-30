@@ -9,10 +9,29 @@ install:
 
     {% endif %}
 {% endfor %}
+
 {% endif %}
 
 {% if config %}
 config:
+{% if config.import %}
   import:
+  {% for module in config.import %}
+    {{ module.module_name }}:{% if module.config is not iterable %} '*'{% endif %}
+
+    {% if module.config is iterable %}
+    {% for filename in module.config %}
+    {% if loop.first %}
+    {% endif %}
+      - {{ filename }}{% if not loop.last %}
+      {% endif %}
+
+    {% endfor %}
+    {% endif %}
+  {% endfor %}
+
+{% endif %}
+{% if config.actions %}
   actions:
+{% endif %}
 {% endif %}

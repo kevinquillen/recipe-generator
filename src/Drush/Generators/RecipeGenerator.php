@@ -168,8 +168,33 @@ final class RecipeGenerator extends DrupalGenerator {
     $vars['config'] = [];
 
     if ($this->confirm('Would you like to run specific config imports for this recipe?', $default)) {
-      // ask for config
-      // also ask if specific imports, or '*'
+      while (TRUE) {
+        $config = [];
+        $question = new Question('What module do you want to import config for (ex. node)?');
+        $module = $this->io()->askQuestion($question);
+
+        if (!$module) {
+          break;
+        }
+
+        if (!$this->confirm("Do you want to import all config for $module (including optional config)?", $default)) {
+          while (TRUE) {
+            $question = new Question("Enter the config file you want to import for $module (without the .yml extension).");
+            $filename = $this->io()->askQuestion($question);
+
+            if (!$filename) {
+              break;
+            }
+
+            $config[] = $filename;
+          }
+        }
+
+        $vars['config']['import'][] = [
+          'module_name' => $module,
+          'config' => (empty($config)) ? '*' : $config,
+        ];
+      }
     }
 
     if ($this->confirm('Would you like to run config actions for this recipe?', $default)) {
