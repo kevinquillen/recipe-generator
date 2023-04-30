@@ -203,8 +203,37 @@ final class RecipeGenerator extends DrupalGenerator {
     }
 
     if ($this->confirm('Would you like to run config actions for this recipe?', $default)) {
-      // ask for config actions
-      // ask for action type
+      while (TRUE) {
+        $question = new Question("Enter the configuration ID you want to run an action against (ex. node.settings).");
+        $id = $this->io()->askQuestion($question);
+
+        if (!$id) {
+          break;
+        }
+
+        while (TRUE) {
+          $question = new Question("Enter the action you want to run (ex. simple_config_update).");
+          $action = $this->io()->askQuestion($question);
+
+          if (!$action) {
+            break;
+          }
+
+          while (TRUE) {
+            $question = new Question("Enter the config property you want to update.");
+            $property = $this->io()->askQuestion($question);
+
+            if (!$property) {
+              break;
+            }
+
+            $question = new Question("Enter the config property value.");
+            $value = $this->io()->askQuestion($question);
+
+          }
+
+        }
+      }
     }
 
     return $vars['config'];
