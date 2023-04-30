@@ -57,8 +57,12 @@ final class RecipeGenerator extends DrupalGenerator {
     $vars['recipe_description'] = $this->ask('What does this recipe do?', NULL, '::validateRequired');
     $vars['composer'] = $this->collectComposerInfo($vars);
     $vars['modules'] = $this->collectModules($vars);
+    $vars['config'] = $this->collectConfig($vars);
 
-    $this->addFile('composer.json', 'composer/composer.json');
+    if (!empty($vars['composer'])) {
+      $this->addFile('composer.json', 'composer/composer.json');
+    }
+
     $this->addFile('recipe.yml', 'recipe/recipe.yml');
   }
 
@@ -148,6 +152,32 @@ final class RecipeGenerator extends DrupalGenerator {
     }
 
     return $vars['modules'];
+  }
+
+  /**
+   * Collects configuration related information from the user.
+   *
+   * @param array $vars
+   *   The input vars.
+   * @param bool $default
+   *   The users choice.
+   *
+   * @return array
+   */
+  protected function collectConfig(array &$vars, bool $default = TRUE): array {
+    $vars['config'] = [];
+
+    if ($this->confirm('Would you like to run specific config imports for this recipe?', $default)) {
+      // ask for config
+      // also ask if specific imports, or '*'
+    }
+
+    if ($this->confirm('Would you like to run config actions for this recipe?', $default)) {
+      // ask for config actions
+      // ask for action type
+    }
+
+    return $vars['config'];
   }
 
 }
