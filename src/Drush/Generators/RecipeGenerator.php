@@ -56,6 +56,7 @@ final class RecipeGenerator extends DrupalGenerator {
     $vars['recipe_type'] = $this->ask('What type of recipe is this (Site, Content Type, Workflow, etc)?', NULL, '::validateRequired');
     $vars['recipe_description'] = $this->ask('What does this recipe do?', NULL, '::validateRequired');
     $vars['composer'] = $this->collectComposerInfo($vars);
+    $vars['modules'] = $this->collectModules($vars);
 
     $this->addFile('composer.json', 'composer/composer.json');
     $this->addFile('recipe.yml', 'recipe/recipe.yml');
@@ -116,6 +117,37 @@ final class RecipeGenerator extends DrupalGenerator {
     }
 
     return $vars['composer'];
+  }
+
+  /**
+   * Collects module related information from the user.
+   *
+   * @param array $vars
+   *   The input vars.
+   * @param bool $default
+   *   The users choice.
+   *
+   * @return array
+   */
+  protected function collectModules(array &$vars, bool $default = TRUE): array {
+    $vars['modules'] = [];
+
+    if (!$this->confirm('Would you like to add modules to install for this recipe?', $default)) {
+      return $vars['modules'];
+    }
+
+    while (TRUE) {
+      $question = new Question('Enter the name of the module to add (ex. node).');
+      $module = $this->io()->askQuestion($question);
+
+      if (!$module) {
+        break;
+      }
+
+      $vars['modules'][] = $module;
+    }
+
+    return $vars['modules'];
   }
 
 }

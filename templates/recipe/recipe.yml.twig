@@ -2,10 +2,13 @@ name: '{{ recipe_name }}'
 description: '{{ recipe_description }}'
 type: '{{ recipe_type }}'
 
+{% if modules %}
 install:
 {% for module in modules %}
-  - {{ module }}
+  - {{ module }}{% if not loop.last %}
+    {% endif %}
 {% endfor %}
+{% endif %}
 
 {% if config %}
 config:
