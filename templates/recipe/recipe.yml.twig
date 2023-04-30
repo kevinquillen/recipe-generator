@@ -6,6 +6,7 @@ type: '{{ recipe_type }}'
 install:
 {% for module in modules %}
   - {{ module }}{% if not loop.last %}
+
     {% endif %}
 {% endfor %}
 {% endif %}
